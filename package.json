@@ -1,8 +1,8 @@
 {
-  "name": "stop-or-move",
+  "name": "stay-point-detection",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "mocha"
   },
