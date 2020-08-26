@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const moment = require('moment')
 
 // 枚举常量
@@ -14,7 +15,7 @@ async function translate(arrdata) {
 	const array = track.map((obj) => ({
 		lat: obj.latitude / 3600000,
 		lng: obj.longitude / 3600000,
-		time: obj.timestamp,
+		timestamp: obj.timestamp,
 	}))
 	return array
 }
@@ -40,14 +41,12 @@ function getDistance(fromLat, fromLng, toLat, toLng) {
 
 // https://www.jianshu.com/p/d2596a294482 使用momentjs计算时间差 moment(Number)要求的是ms
 function getDuration(time1, time2) {
-	return moment(time2 * 1000).diff(moment(time1 * 1000), 'second')
+	return moment(time2).diff(moment(time1), 'second')
 	// 或直接 return time2 - time1
 }
 
 // 设置值单位 setdis:米 settime:秒
-async function movementStateCalculator({
-	firstState, arrdata, distanceThreshold, timeThreshold,
-}) {
+async function movementStateCalculator(arrdata, { firstState = State.Stop, distanceThreshold = 50, timeThreshold = 180 } = {}) {
 	const output = []
 	const arr = await translate(arrdata)
 	if (arrdata.length < 2) {
@@ -56,13 +55,13 @@ async function movementStateCalculator({
 	let pivot = arr[0]
 	pivot.state = firstState
 
-	for (let i = 0; i < arr.length; i++) {
+	for (let i = 0; i < arr.length; i += 1) {
 		const current = arr[i]
 		if (current != null) {
 			const distance = getDistance(pivot.lat, pivot.lng, current.lat, current.lng)
-			const duration = getDuration(pivot.time, current.time)
-			console.log(`distance is ${distance}`)
-			console.log(`duration is ${duration}`)
+			const duration = getDuration(pivot.timestamp, current.timestamp)
+			console.log(`distance ${i} is ${distance}`)
+			console.log(`duration ${i} is ${duration}`)
 			if (pivot.state === State.Stop) {
 				if (distance < distanceThreshold) {
 					current.state = State.Stop
@@ -82,7 +81,7 @@ async function movementStateCalculator({
 				}
 			}
 			const newTrack = {
-				lat: current.lat, lng: current.lng, timestamp: current.time, state: current.state,
+				lat: current.lat, lng: current.lng, timestamp: current.timestamp, state: current.state,
 			}
 			output.push(newTrack)
 		}

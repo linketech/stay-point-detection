@@ -1,5 +1,5 @@
 {
-  "name": "stay-point-detection",
+  "name": "@linke/stay-point-detection",
   "version": "1.0.0",
   "description": "",
   "main": "./src/index.js",
@@ -9,10 +9,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^7.7.0",
     "should": "^13.2.3"
   },
   "dependencies": {
+    "eslint": "^7.7.0",
     "moment": "^2.27.0"
   }
 }

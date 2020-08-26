@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/** 模拟从json文件中获取对象数组 */
 const moment = require('moment')
 const fsPromises = require('fs').promises
 const path = require('path')
@@ -32,7 +34,7 @@ async function translate() {
 	const array = track.map((obj) => ({
 		lat: obj.latitude / 3600000,
 		lng: obj.longitude / 3600000,
-		time: obj.timestamp,
+		timestamp: obj.timestamp,
 	}))
 	return array
 }
@@ -66,7 +68,7 @@ function getDuration(time1, time2) {
 
 
 // 设置值单位 setdis:米 settime:秒
-async function movementStateCalculator({ firstState, distanceThreshold, timeThreshold }) {
+async function movementStateCalculator({ firstState = State.Stop, distanceThreshold = 50, timeThreshold = 180 } = {}) {
 	const output = []
 	const arr = await translate()
 	if (arr.length < 2) {
@@ -76,11 +78,11 @@ async function movementStateCalculator({ firstState, distanceThreshold, timeThre
 	pivot.state = firstState
 	// const stop = pivot.state // 2是stop 1是move
 
-	for (let i = 0; i < arr.length; i++) {
+	for (let i = 0; i < arr.length; i += 1) {
 		const current = arr[i]
 		if (current != null) {
 			const distance = getDistance(pivot.lat, pivot.lng, current.lat, current.lng)
-			const duration = getDuration(pivot.time, current.time)
+			const duration = getDuration(pivot.timestamp, current.timestamp)
 			console.log(`distance ${i} is ${distance}`)
 			console.log(`duration ${i} is ${duration}`)
 			if (pivot.state === State.Stop) {
@@ -102,7 +104,7 @@ async function movementStateCalculator({ firstState, distanceThreshold, timeThre
 				}
 			}
 			const newTrack = {
-				lat: current.lat, lng: current.lng, timestamp: current.time, state: current.state,
+				lat: current.lat, lng: current.lng, timestamp: current.timestamp, state: current.state,
 			}
 			output.push(newTrack)
 		}

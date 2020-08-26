@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-mixed-spaces-and-tabs */
 const moment = require('moment')
 
 // 枚举常量
@@ -33,20 +35,20 @@ function getDuration(time1, time2) {
 }
 
 // 设置值单位 distanceThreshold:米 timeThreshold:秒
-async function movementStateCalculator({
-	firstState, arrdata, distanceThreshold, timeThreshold,
-}) {
+async function movementStateCalculator(arrdata, { firstState = State.Stop, distanceThreshold = 50, timeThreshold = 180 } = {}) {
 	const output = []
-	if (arrdata.length < 2) {
+	if (Array.isArray(arrdata) && arrdata.length > 2) {
+		next()
+	} else if (arrdata.length < 2) {
 		throw new Error('the number of array elements must be greater than 2')
 	}
 	let pivot = arrdata[0]
 	pivot.state = firstState
 
-	for (let i = 0; i < arrdata.length; i++) {
+	for (let i = 0; i < arrdata.length; i += 1) {
 		const current = arrdata[i]
 		const distance = getDistance(pivot.lat, pivot.lng, current.lat, current.lng)
-		const duration = getDuration(pivot.time, current.time)
+		const duration = getDuration(pivot.timestamp, current.timestamp)
 		if (pivot.state === State.Stop) {
 			if (distance < distanceThreshold) {
 				current.state = State.Stop
@@ -66,12 +68,12 @@ async function movementStateCalculator({
 			}
 		}
 		const newTrack = {
-			lat: current.lat, lng: current.lng, timestamp: current.time, state: current.state,
+			lat: current.lat, lng: current.lng, timestamp: current.timestamp, state: current.state,
 		}
 		output.push(newTrack)
 	}
-	console.log(output)
 	return output
 }
+
 
 module.exports = { movementStateCalculator, State }
