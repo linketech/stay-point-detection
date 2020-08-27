@@ -66,10 +66,7 @@ async function movementStateCalculator(arrdata, { firstState = State.Stop, dista
 				current.state = State.Move
 			}
 		}
-		const newTrack = {
-			lat: current.lat, lng: current.lng, timestamp: current.time, state: current.state,
-		}
-		output.push(newTrack)
+		output.push(current)
 	}
 	return output
 }
