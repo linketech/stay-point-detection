@@ -1,7 +1,7 @@
 {
   "name": "@linke/stay-point-detection",
   "version": "1.0.0",
-  "description": "",
+  "description": "​        输入为带有经纬度以及时间的对象数组，如[{ lat, lng, timestamp},{...},...]；",
   "main": "./src/index.js",
   "scripts": {
     "test": "mocha"
@@ -14,5 +14,16 @@
   "dependencies": {
     "eslint": "^7.7.0",
     "moment": "^2.27.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linketech/stay-point-detection.git"
+  },
+  "bugs": {
+    "url": "https://github.com/linketech/stay-point-detection/issues"
+  },
+  "homepage": "https://github.com/linketech/stay-point-detection#readme"
 }

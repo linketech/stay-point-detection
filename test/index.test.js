@@ -41,11 +41,13 @@ const arrdata2 = [
 	},
 ]
 
-const arrdata3 = 	[
+const arrdata3 = [
 	{
 		mileage: 34348.73259209824, degree: 94.0, timestamp: 1597836355 * 1000, locate_error: 8, clongitude: 408699513, address: '', clatitude: 109359295, point_type: 1, speed: 24, firmware_version: 'E', lid: 0, latitude: 109345752 / 3600000, dev_type: 'ZJ210', longitude: 408655476 / 3600000, tid: 'efd12ad096104b8a9d2668d2ec088588', locate_type: 1,
 	},
 ]
+
+const data4 = { 1: 1, 2: 2, 3: 3 }
 
 describe('判断车状态', () => {
 	describe('判断输出数组元素个数是否与输入的一样', () => {
@@ -164,9 +166,15 @@ describe('判断车状态', () => {
 		})
 	})
 
-	describe('数组元素必须大于2，否则没意义111', () => {
-		it('return 数组元素必须大于2', async () => {
+	describe('数组元素必须大于2，否则没意义', () => {
+		it('数组元素必须大于2', async () => {
 			await movementStateCalculator(arrdata3).should.be.rejectedWith('the number of array elements must be greater than 2')
+		})
+	})
+
+	describe('第一个参数必须是数组类型', () => {
+		it('arrdata must be an array type', async () => {
+			await movementStateCalculator(data4).should.be.rejectedWith('arrdata must be an array type')
 		})
 	})
 })

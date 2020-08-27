@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-/* eslint-disable no-mixed-spaces-and-tabs */
 const moment = require('moment')
 
 // 枚举常量
@@ -12,7 +11,7 @@ const RADIUS = 6371
 // gps计算距离
 // R和Distance单位是相同，如果是采用6371.004千米作为半径，那么Distance就是千米为单位
 function Rad(d) {
-	return d * Math.PI / 180.0
+	return (d * Math.PI) / 180.0
 }
 // 精度较高 计算距离，参数分别为第一点的纬度，经度；第二点的纬度，经度
 function getDistance(fromLat, fromLng, toLat, toLng) {
@@ -36,43 +35,43 @@ function getDuration(time1, time2) {
 
 // 设置值单位 distanceThreshold:米 timeThreshold:秒
 async function movementStateCalculator(arrdata, { firstState = State.Stop, distanceThreshold = 50, timeThreshold = 180 } = {}) {
-	const output = []
-	if (arrdata.length < 2) {
+	if (!Array.isArray(arrdata)) {
+		throw new Error('arrdata must be an array type')
+	} else if (arrdata.length < 2) {
 		throw new Error('the number of array elements must be greater than 2')
-	}else if(Array.isArray(arrdata) && arrdata.length > 2){
-		let pivot = arrdata[0]
-		pivot.state = firstState
-
-		for (let i = 0; i < arrdata.length; i += 1) {
-			const current = arrdata[i]
-			const distance = getDistance(pivot.latitude, pivot.longitude, current.latitude, current.longitude)
-			const duration = getDuration(pivot.timestamp, current.timestamp)
-			if (pivot.state === State.Stop) {
-				if (distance < distanceThreshold) {
-					current.state = State.Stop
-				} else {
-					current.state = State.Move
-					pivot = current
-				}
-			} else if (pivot.state === State.Move) {
-				if (distance > distanceThreshold) {
-					current.state = State.Move
-					pivot = current
-				} else if (duration > timeThreshold) {
-					current.state = State.Stop
-					pivot = current
-				} else {
-					current.state = State.Move
-				}
-			}
-			const newTrack = {
-				latitude: current.latitude, longitude: current.longitude, timestamp: current.timestamp, state: current.state,
-			}
-			output.push(newTrack)
-		}
-		return output
 	}
+	// 浅拷贝
+	const output = []
+	let pivot = { ...arrdata[0] }
+	pivot.state = firstState
+	for (let i = 0; i < arrdata.length; i += 1) {
+		const current = { ...arrdata[i] }
+		const distance = getDistance(pivot.latitude, pivot.longitude, current.latitude, current.longitude)
+		const duration = getDuration(pivot.timestamp, current.timestamp)
+		if (pivot.state === State.Stop) {
+			if (distance < distanceThreshold) {
+				current.state = State.Stop
+			} else {
+				current.state = State.Move
+				pivot = current
+			}
+		} else if (pivot.state === State.Move) {
+			if (distance > distanceThreshold) {
+				current.state = State.Move
+				pivot = current
+			} else if (duration > timeThreshold) {
+				current.state = State.Stop
+				pivot = current
+			} else {
+				current.state = State.Move
+			}
+		}
+		const newTrack = {
+			lat: current.lat, lng: current.lng, timestamp: current.time, state: current.state,
+		}
+		output.push(newTrack)
+	}
+	return output
 }
-
 
 module.exports = { movementStateCalculator, State }
