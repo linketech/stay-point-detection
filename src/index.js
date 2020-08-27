@@ -37,42 +37,41 @@ function getDuration(time1, time2) {
 // 设置值单位 distanceThreshold:米 timeThreshold:秒
 async function movementStateCalculator(arrdata, { firstState = State.Stop, distanceThreshold = 50, timeThreshold = 180 } = {}) {
 	const output = []
-	if (Array.isArray(arrdata) && arrdata.length > 2) {
-		next()
-	} else if (arrdata.length < 2) {
+	if (arrdata.length < 2) {
 		throw new Error('the number of array elements must be greater than 2')
-	}
-	let pivot = arrdata[0]
-	pivot.state = firstState
+	}else if(Array.isArray(arrdata) && arrdata.length > 2){
+		let pivot = arrdata[0]
+		pivot.state = firstState
 
-	for (let i = 0; i < arrdata.length; i += 1) {
-		const current = arrdata[i]
-		const distance = getDistance(pivot.lat, pivot.lng, current.lat, current.lng)
-		const duration = getDuration(pivot.timestamp, current.timestamp)
-		if (pivot.state === State.Stop) {
-			if (distance < distanceThreshold) {
-				current.state = State.Stop
-			} else {
-				current.state = State.Move
-				pivot = current
+		for (let i = 0; i < arrdata.length; i += 1) {
+			const current = arrdata[i]
+			const distance = getDistance(pivot.latitude, pivot.longitude, current.latitude, current.longitude)
+			const duration = getDuration(pivot.timestamp, current.timestamp)
+			if (pivot.state === State.Stop) {
+				if (distance < distanceThreshold) {
+					current.state = State.Stop
+				} else {
+					current.state = State.Move
+					pivot = current
+				}
+			} else if (pivot.state === State.Move) {
+				if (distance > distanceThreshold) {
+					current.state = State.Move
+					pivot = current
+				} else if (duration > timeThreshold) {
+					current.state = State.Stop
+					pivot = current
+				} else {
+					current.state = State.Move
+				}
 			}
-		} else if (pivot.state === State.Move) {
-			if (distance > distanceThreshold) {
-				current.state = State.Move
-				pivot = current
-			} else if (duration > timeThreshold) {
-				current.state = State.Stop
-				pivot = current
-			} else {
-				current.state = State.Move
+			const newTrack = {
+				latitude: current.latitude, longitude: current.longitude, timestamp: current.timestamp, state: current.state,
 			}
+			output.push(newTrack)
 		}
-		const newTrack = {
-			lat: current.lat, lng: current.lng, timestamp: current.timestamp, state: current.state,
-		}
-		output.push(newTrack)
+		return output
 	}
-	return output
 }
 
 
