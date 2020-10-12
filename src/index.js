@@ -71,7 +71,7 @@ async function movementStateCalculator(arrdata, { firstState = State.Stop, dista
 	return output
 }
 
-function stateMaintenanceTimeCalculator(timedata){
+function stateDurationCalculator(timedata){
 	const new_data = _.cloneDeep(timedata)
 	let start = 0
 
@@ -83,7 +83,6 @@ function stateMaintenanceTimeCalculator(timedata){
 			start = index
 		}
 	}
-	console.log(new_data)
 	return new_data
 }
-module.exports = { movementStateCalculator, State, stateMaintenanceTimeCalculator}
+module.exports = { movementStateCalculator, State, stateDurationCalculator}
