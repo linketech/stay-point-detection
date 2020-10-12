@@ -1,6 +1,6 @@
 {
   "name": "@linke/stay-point-detection",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "​        输入为带有经纬度以及时间的对象数组，如[{ lat, lng, timestamp},{...},...]；",
   "main": "./src/index.js",
   "scripts": {
