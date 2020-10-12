@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-undef */
 const should = require('should')
-const { movementStateCalculator, State } = require('../src/index.js')
+const { movementStateCalculator, State, stayDurationCalculator} = require('../src/index.js')
 
 const arrdata = [
 	{
@@ -166,15 +166,47 @@ describe('判断车状态', () => {
 		})
 	})
 
-	describe('数组元素必须大于2，否则没意义', () => {
-		it('数组元素必须大于2', async () => {
-			await movementStateCalculator(arrdata3).should.be.rejectedWith('the number of array elements must be greater than 2')
+	describe('数组元素只有一个时，返回默认状态', () => {
+		it('返回该点状态与默认状态一致', async () => {
+			const output = await movementStateCalculator(arrdata3, { firstState: State.Move, distanceThreshold: 10, timeThreshold: 65 })
+			output[0].state.should.equal(State.Move)
+		})
+	})
+
+	describe('数组个数为0，返回空数组', () => {
+		it('输出数组为空数组', async () => {
+			const output = await movementStateCalculator([], { firstState: State.Stop, distanceThreshold: 10, timeThreshold: 65 })
+			output.length.should.equal(0)
 		})
 	})
 
 	describe('第一个参数必须是数组类型', () => {
 		it('arrdata must be an array type', async () => {
 			await movementStateCalculator(data4).should.be.rejectedWith('arrdata must be an array type')
+		})
+	})
+})
+
+const timedata =  [
+	{
+		timestamp: 1597826397 * 1000, state: 2
+	}, {
+		timestamp: 1597826557 * 1000, state: 2
+	}, {
+		timestamp: 1597826618 * 1000, state: 1
+	}, {
+		timestamp: 1597826679 * 1000, state: 1
+	}, {
+		timestamp: 1597826730 * 1000, state: 2
+	},
+]
+
+describe('移动停留状态维持时间计算', () => {
+	describe('p3状态由静止变为移动，p5状态由移动变为静止', () => {
+		it('p3前静止的维持时间为p3时间-p1时间，p5前移动的维持时间为p5时间-p3时间', () => {
+			const output = stayDurationCalculator(timedata)
+			output[0].stay_time.should.equal(output[2].timestamp-output[0].timestamp)
+			output[2].stay_time.should.equal(output[4].timestamp-output[2].timestamp)
 		})
 	})
 })

@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const moment = require('moment')
+const _ = require('lodash')
 
 // 枚举常量
 const State = {
@@ -37,9 +38,8 @@ function getDuration(time1, time2) {
 async function movementStateCalculator(arrdata, { firstState = State.Stop, distanceThreshold = 50, timeThreshold = 180 } = {}) {
 	if (!Array.isArray(arrdata)) {
 		throw new Error('arrdata must be an array type')
-	} else if (arrdata.length < 2) {
-		throw new Error('the number of array elements must be greater than 2')
-	}
+	} 
+
 	// 浅拷贝
 	const output = []
 	let pivot = { ...arrdata[0] }
@@ -71,4 +71,18 @@ async function movementStateCalculator(arrdata, { firstState = State.Stop, dista
 	return output
 }
 
-module.exports = { movementStateCalculator, State }
+function stateDurationCalculator(timedata){
+	const new_data = _.cloneDeep(timedata)
+	let start = 0
+
+	for (let index = 0; index < new_data.length; index += 1) {
+		new_data[start].start_time = new_data[start].timestamp
+		new_data[start].end_time = new_data[index].timestamp
+		new_data[start].stay_time = new_data[index].timestamp - new_data[start].timestamp
+		if (new_data[start].state !== new_data[index].state) {
+			start = index
+		}
+	}
+	return new_data
+}
+module.exports = { movementStateCalculator, State, stateDurationCalculator}
