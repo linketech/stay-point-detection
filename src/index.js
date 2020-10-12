@@ -78,7 +78,7 @@ function stateDurationCalculator(timedata){
 	for (let index = 0; index < new_data.length; index += 1) {
 		new_data[start].start_time = new_data[start].timestamp
 		new_data[start].end_time = new_data[index].timestamp
-		new_data[start].stay_time = new_data[index].timestamp - new_data[start].timestamp
+		new_data[start].state_duration = new_data[index].timestamp - new_data[start].timestamp
 		if (new_data[start].state !== new_data[index].state) {
 			start = index
 		}

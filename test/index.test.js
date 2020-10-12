@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-undef */
 const should = require('should')
-const { movementStateCalculator, State, stayDurationCalculator} = require('../src/index.js')
+const { movementStateCalculator, State, stateDurationCalculator} = require('../src/index.js')
 
 const arrdata = [
 	{
@@ -204,9 +204,9 @@ const timedata =  [
 describe('移动停留状态维持时间计算', () => {
 	describe('p3状态由静止变为移动，p5状态由移动变为静止', () => {
 		it('p3前静止的维持时间为p3时间-p1时间，p5前移动的维持时间为p5时间-p3时间', () => {
-			const output = stayDurationCalculator(timedata)
-			output[0].stay_time.should.equal(output[2].timestamp-output[0].timestamp)
-			output[2].stay_time.should.equal(output[4].timestamp-output[2].timestamp)
+			const output = stateDurationCalculator(timedata)
+			output[0].state_duration.should.equal(output[2].timestamp-output[0].timestamp)
+			output[2].state_duration.should.equal(output[4].timestamp-output[2].timestamp)
 		})
 	})
 })
