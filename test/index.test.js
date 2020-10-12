@@ -201,20 +201,6 @@ const timedata =  [
 	},
 ]
 
-const arrdata1 = [
-	{
-		timestamp: 1597826397 * 1000, state: 2, latitude: 109338732 / 3600000, longitude: 408672036 / 3600000, 
-	}, {
-		timestamp: 1597826557 * 1000, state: 2, latitude: 109339200 / 3600000, longitude: 408672972 / 3600000, 
-	}, {
-		timestamp: 1597826618 * 1000, state: 1, latitude: 109339200 / 3600000, longitude: 408673044 / 3600000, 
-	}, {
-		timestamp: 1597826679 * 1000, state: 1, latitude: 109339200 / 3600000, longitude: 408672972 / 3600000, 
-	}, {
-		timestamp: 1597826730 * 1000, state: 2, latitude: 109339200 / 3600000, longitude: 408672972 / 3600000, 
-	},
-]
-
 describe('移动停留状态维持时间计算', () => {
 	describe('p3状态由静止变为移动，p5状态由移动变为静止', () => {
 		it('p3前静止的维持时间为p3时间-p1时间，p5前移动的维持时间为p5时间-p3时间', () => {
